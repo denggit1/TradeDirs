@@ -1,0 +1,83 @@
+{% extends 'tstbase.html' %}
+{% block page %}
+    <div class="container" style="margin-top: 100px;">
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 17px;" class="label label-default">
+            <div style="margin-top: 3px;">{{key_name}} bn订单</div>
+            <div style="margin-top: 3px;">
+            <select style="" id="symbol">
+                <option value="BCHUSDT">BCHUSDT</option>
+                <option value="BTCUSDT">BTCUSDT</option>
+                <option value="EOSUSDT">EOSUSDT</option>
+                <option value="ETCUSDT">ETCUSDT</option>
+                <option value="ETHUSDT">ETHUSDT</option>
+                <option value="LTCUSDT">LTCUSDT</option>
+                <option value="TRXUSDT">TRXUSDT</option>
+                <option value="XRPUSDT">XRPUSDT</option>
+            </select>
+            <select style="" id="cid">
+                <option value="all">all</option>
+                <option value="freq14">freq14</option>
+                <option value="freq21">freq21</option>
+                <option value="freq25">freq25</option>
+                <option value="freq30">freq30</option>
+                <option value="freq35">freq35</option>
+                <option value="market">market</option>
+            </select>
+            <button id="select">查询订单</button>
+            </div>
+        </span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 10px;margin-left: 10px; padding-bottom: 20px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">合约</td>
+                        <td width="200">时间</td>
+                        <td width="200">买卖</td>
+                        <td width="200">数量</td>
+                        <td width="200">均价</td>
+                        <td width="200">ID</td>
+                    </tr>
+                    {% for msg in orders|dictsortreversed:"updateTime" %}
+                        <tr class="orders">
+                            <td class="symbol">{{ msg.symbol }}</td>
+                            <td class="time">{{ msg.updateTime }}</td>
+                            <td>{{ msg.side }}</td>
+                            <td>{{ msg.origQty }}</td>
+                            <td>{{ msg.avgPrice }}</td>
+                            <td class="cid">{{ msg.clientOrderId|slice:":22" }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        function tsFormatTime(inputTime) {
+            //从后台获取的时间戳是毫秒数的，所以得乘以1000，注意有时候获取到的是已经乘了1000的
+            var time = parseInt(inputTime);  
+            var date = new Date(time);
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            var str = y + '-' + m + '-' + d + ' ' + hour + ':' + min + ':' + sec;
+            return str;
+        }
+        $('.time').each(function(){
+           var t = $(this).text();
+           var nt = tsFormatTime(t);
+           $(this).text(nt);
+        });
+        $("#select").click(function(){
+           $("tr[class=orders]").each(function(){
+             if ($(this).children("td[class=symbol]").text() == $("#symbol").val()){
+                 $(this).show();
+             }
+	     else{$(this).hide();}
+           });
+        });
+    </script>
+{% endblock %}

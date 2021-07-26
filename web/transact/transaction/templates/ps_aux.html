@@ -1,0 +1,127 @@
+{% extends 'tstbase.html' %}
+{% block page %}
+    <div class="container" style="margin-top: 100px; padding-bottom: 20px;">
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default">
+            <p style="margin-top: 6px;">{{ key_name }} 管理界面</p>
+        </span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 10px;margin-left: 10px;">
+            <form action="/transaction/ps_aux/" method="post" onsubmit="checkBeforeSubmit();">
+                {% csrf_token %}
+                <input type="hidden" name="this_type" value="ps_aux">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">ws<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="ws"></td>
+                        <td width="200">hg1<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="hg1"></td>
+                        <td width="200">bl1<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="bl1"></td>
+                        <td width="200">freq<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="freq"></td>
+                        <td width="200">stop<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="stop"></td>
+                        <td width="200">email<input class="process_name" style="width: 20px;" type="checkbox" name="bind" value="email"></td>
+                    </tr>
+                    <tr id="process_status">
+                        <td>{{ ps_tuple.0 }}</td>
+                        <td>{{ ps_tuple.1 }}</td>
+                        <td>{{ ps_tuple.2 }}</td>
+                        <td>{{ ps_tuple.3 }}</td>
+                        <td>{{ ps_tuple.4 }}</td>
+                        <td>{{ ps_tuple.5 }}</td>
+                    </tr>
+                </table>
+                <input type="submit" value="修改启动程序" style="width: 30%; padding:5px; margin: 0 auto; display: block;margin-top:10px;">
+            </form>
+            <form action="/transaction/ps_aux/" method="post" onsubmit="checkBeforeSubmit();">
+                {% csrf_token %}
+                <input type="hidden" name="this_type" value="web_house">
+                <table style="margin-top:15px;" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">freq仓位</td>
+                        <td width="200">hg1仓位</td>
+                        <td width="200">bl1仓位</td>
+                    </tr>
+                    <tr>
+                        <td>{{ web_house.8 }}</td>
+                        <td>{{ web_house.6 }}</td>
+                        <td>{{ web_house.3 }}</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="freq_num" value="no" style="width: 40%;"></td>
+                        <td><input type="text" name="hg1_num" value="no" style="width: 40%;"></td>
+                        <td><input type="text" name="bl1_num" value="no" style="width: 40%;"></td>
+                    </tr>
+                </table>
+                <input type="submit" value="修改仓位金额" style="width: 30%; padding:5px; margin: 0 auto; display: block;margin-top:10px;">
+            </form>
+            <form action="/transaction/ps_aux/" method="post" onsubmit="checkBeforeSubmit();">
+                {% csrf_token %}
+                <input type="hidden" name="this_type" value="wh_order">
+                <table style="margin-top:10px;" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">stop止损</td>
+                        <td width="200">fqmx余额</td>
+                        <td width="200">bl1个数</td>
+                        <td width="200">hg1个数</td>
+                    </tr>
+                    <tr>
+                        <td>{{ web_house.0 }}</td>
+                        <td>{{ web_house.1 }}</td>
+                        <td>{{ web_house.2 }}</td>
+                        <td>{{ web_house.5 }}</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="stop_num" value="no" style="width: 40%;"></td>
+                    </tr>
+                </table>
+                <table style="margin-top:5px;" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">bl1记录</td>
+                        <td width="200">hg1记录</td>
+                    </tr>
+                    <tr>
+                        <td>{{ web_house.4 }}</td>
+                        <td>{{ web_house.7 }}</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="bl1_first" value="no" style="width: 40%;"></td>
+                        <td><input type="text" name="hg1_first" value="no" style="width: 40%;"></td>
+                    </tr>
+                </table>
+                <input type="submit" value="修改记录止损" style="width: 30%; padding:5px; margin: 0 auto; display: block;margin-top:10px;">
+            </form>
+            </div>
+        </div>
+        <div style="width: 100%;margin-top:10px;margin-left: 10px;">
+            <div class="table-d" style="font-size: 12px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="middle" style="padding-bottom:10px;">程序运行状态</td>
+                    </tr>
+                    {% for msg in ps_info %}
+                    <tr>
+                        <td align="left" valign="middle" style="padding-bottom:10px;">{{ msg }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <p style="width: 100%;margin-top:5px;margin-left: 10px;">
+            一、启动hg1：a.修改仓位金额-hg1仓位。b.修改启动程序-开启ws、开启hg1。c.修改记录止损-hg1记录第一笔开仓价。<br>
+            二、启动bl1：a.修改仓位金额-bl1仓位。b.修改启动程序-开启ws、开启bl1。c.修改记录止损-bl1记录第一笔开仓价。<br>
+            三、启动freq：a.修改仓位金额-freq仓位。b.修改记录止损-stop止损金额。c.修改启动程序-开启ws、开启freq、开启email、开启stop。<br>
+            四、软重启freq：a.修改启动程序-关闭freq。b.修改启动程序-开启freq。<br>
+            五、停止freq：a.freq信息-停止高频。<br>
+            六、停止bl1：a.修改启动程序-关闭bl1。b.web权限-仓位平仓。<br>
+            七、停止hg1：a.修改启动程序-关闭hg1。b.web权限-仓位平仓。
+        </p>
+    </div>
+    <script type="text/javascript">
+        for (i = 0; i < 6; i++) {
+            if ($("#process_status td").eq(i).text() == "1"){
+                $(".process_name").eq(i).attr("checked", true);
+            }
+        }
+        function checkBeforeSubmit() {
+            alert('正在执行操作中，请点击确认后稍等片刻！');
+        }
+    </script>
+{% endblock %}

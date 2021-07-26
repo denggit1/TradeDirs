@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP</title>
+    <link href="/static/bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet">
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="btn-group" style="margin-top:10px; margin-left:10px;">
+                    <button type="button" style="background-color: gray;border-color: gray;color:white;" 
+                    class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ username }} ({{ key_name }}) <span class="caret"></span></button>
+                </div>
+
+            </div>
+
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav">
+              <li><a href="/transaction/">首页</a></li>
+              <li><a href="/transaction/bnwh/">bn资产</a></li>
+              <li><a href="/transaction/bnod/">bn订单</a></li>
+              <li><a href="/transaction/senior/">web权限</a></li>
+              <li><a href="/transaction/freq_info/">pos信息</a></li>
+              <li><a href="/transaction/ps_aux/">监测界面</a></li>
+              <li><a href="/transaction/capitalcurve/">资金曲线</a></li>
+              <li><a href="http://119.28.156.196/transaction/key_time/">监控管理</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right hidden-sm">
+              <li><a href="/transaction/delsession/">退出系统</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% block page %}
+    {% endblock %}
+</body>
+</html>

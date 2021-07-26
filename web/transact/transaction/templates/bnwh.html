@@ -1,0 +1,166 @@
+{% extends 'tstbase.html' %}
+{% block page %}
+    <div class="container" style="margin-top: 100px;">
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default"><p style="margin-top: 6px;">{{key_name}} bn资产</p></span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 17px;margin-left: 10px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">货币名</td>
+                        <td width="200">余额量</td>
+                        <td width="200">占用量</td>
+                    </tr>
+                    {% for msg in balance %}
+                        <tr>
+                            <td>{{ msg.asset }}</td>
+                            <td>{{ msg.marginBalance|floatformat:6 }}</td>
+                            <td>{{ msg.positionInitialMargin|floatformat:6 }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <table width="100%" border="0" cellspacing="1" cellpadding="0" style="font-size:14px;">
+                    <tr>
+                        <td width="200">WEIGHT</td>
+                        <td width="200">本地端时间戳</td>
+                        <td width="200">服务器时间戳</td>
+                    </tr>
+                    <tr>
+                        <td width="200">{{ exchange_info.usedWeight }}</td>
+                        <td width="200">{{ exchange_info.localTime }}</td>
+                        <td width="200">{{ exchange_info.serverTime }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default"><p style="margin-top: 6px;">web 仓位信息</p></span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 17px;margin-left: 10px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">货币代码</td>
+                        <td width="200">持仓数量</td>
+                        <td width="200">保证金额</td>
+                    </tr>
+                    {% for msg in position|dictsort:'symbol' %}
+                        <tr>
+                            <td>{{ msg.symbol }}</td>
+                            <td class="{{ msg.symbol }}">{{ msg.positionAmt }}</td>
+                            <td>{{ msg.bzj }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default"><p style="margin-top: 6px;">db 仓位信息</p></span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 17px;margin-left: 10px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">货币代码</td>
+                        <td width="200">持仓数量</td>
+                        <td width="200">精度差值</td>
+                    </tr>
+                    {% for msg in sum_dict.items|dictsort:0 %}
+                        <tr>
+                            <td>{{ msg.0 }}</td>
+                            <td class="{{ msg.0 }}">{{ msg.1 }}</td>
+                            <td id="{{ msg.0 }}">None</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default"><p style="margin-top: 6px;">web 挂单信息（{{ open_orders|length }}）</p></span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 12px;margin-left: 10px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">交易对</td>
+                        <td width="200">方向</td>
+                        <td width="200">总量(价格)</td>
+                        <td width="200">成交</td>
+                        <td width="200">客户id</td>
+                    </tr>
+                    {% for msg in open_orders|dictsort:"clientOrderId" %}
+                        <tr>
+                            <td>{{ msg.symbol }}</td>
+                            <td>{{ msg.side }}</td>
+                            <td>{{ msg.origQty }}/{{ msg.price }}({{ msg.stopPrice }})</td>
+                            <td class="{{ msg.symbol }}{{ msg.side }}">{{ msg.executedQty }}</td>
+                            <td class="web_id">{{ msg.clientOrderId }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <span style="margin: 0 auto;display: block; width: 100%;height: 50px;background-color: #f5f5f5;color: #232a4a;
+        font-size: 25px;" class="label label-default"><p style="margin-top: 6px;"> db 挂单信息（{{ order_tuple|length }}）</p></span>
+        <div style="width: 100%;margin-top: 10px;">
+            <div class="table-d" style="font-size: 12px;margin-left: 10px; padding-bottom: 20px;">
+                <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                    <tr>
+                        <td width="200">交易对</td>
+                        <td width="200">方向</td>
+                        <td width="200">数量</td>
+                        <td width="200">价格</td>
+                        <td width="200">客户id</td>
+                    </tr>
+                    {% for msg in order_tuple|dictsort:4 %}
+                        <tr>
+                            <td>{{ msg.0 }}</td>
+                            <td>{{ msg.1 }}</td>
+                            <td>{{ msg.3 }}</td>
+                            <td>{{ msg.2 }}</td>
+                            <td class="db_id">{{ msg.4 }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        var list1 = [];
+        $(".db_id").each(function(){
+            list1.push($(this).text());
+        });
+        $(".web_id").each(function(){
+            if ($.inArray($(this).text(), list1) >= 0){
+                $(this).css("font-style","italic");
+            }
+            else{
+                $(this).css("color","red");
+            }
+        });
+
+        var list2 = [];
+        $(".web_id").each(function(){
+            list2.push($(this).text());
+        });
+        $(".db_id").each(function(){
+            if ($.inArray($(this).text(), list2) >= 0){
+                $(this).css("font-style","italic");
+            }
+            else{
+                $(this).css("color","red");
+            }
+        });
+        $.each(["BTCUSDT", "ETHUSDT", "BCHUSDT", "XRPUSDT", "EOSUSDT", "LTCUSDT", "TRXUSDT", "ETCUSDT"], function() {
+            var diff = $("."+this+":eq(1)").text() - $("."+this+":eq(0)").text();
+            $('.'+this+'SELL').each(function(){
+                if (parseFloat($(this).text()) != 0.0){
+                    diff -= parseFloat($(this).text());
+                }
+            })
+            $('.'+this+'BUY').each(function(){
+                if (parseFloat($(this).text()) != 0.0){
+                    diff += parseFloat($(this).text());
+                }
+            })
+            $("#"+this).text(diff.toFixed(3));
+        });    
+    </script>
+{% endblock %}

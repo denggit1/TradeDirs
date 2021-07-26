@@ -1,0 +1,15 @@
+[uwsgi]
+# Django-related settings
+socket = 127.0.0.1:5000
+# the base directory (full path)
+chdir = /root/TradeDirs/web/transact
+# Django s wsgi fi
+wsgi-file = /root/TradeDirs/web/transact/transact/wsgi.py
+# master
+master = true
+# /usr/local/bin/uwsgi --ini /root/TradeDirs/web/transact/uwsgi.ini
+processes = 4
+# netstat -ntlp
+vacuum = true
+daemonize = /root/TradeDirs/web/transact/uwsgi.log
+pidfile = /root/TradeDirs/web/transact/uwsgi.pid
